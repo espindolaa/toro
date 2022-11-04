@@ -56,23 +56,28 @@ def draw_boxes(ax, boxes, color, style):
 
 def read_boxes(data): 
   boxes = []
-  for entry in data['boxes']:
+  for entry in data['Boxes']['Allocated']:
     boxes.append(read_box(entry))
   return boxes
 
 def read_areas(data): 
   areas = []
-  for entry in data['areas']:
-    areas.append(read_box(entry))
+  for entry in data['Areas']:
+    areas.append(read_area(entry))
   return areas
 
 def read_box(entry):
-    starting = entry['bottom_left_corner']
-    point = Coordinate(starting['x'], starting['y'], starting['z'])
-    return Box(point, entry['width'], entry['length'], entry['height'])
+    starting = entry['LeftBottomCorner']
+    point = Coordinate(starting['X'], starting['Y'], starting['Z'])
+    return Box(point, entry['Item']['Width'], entry['Item']['Length'], entry['Item']['Height'])
+
+def read_area(entry):
+    starting = entry['LeftBottomCorner']
+    point = Coordinate(starting['X'], starting['Y'], starting['Z'])
+    return Box(point, entry['Length'], entry['Width'], entry['Height'])
 
 def read_file():
-  f = open('test.json')
+  f = open('result.json')
   data = json.load(f)
 
   boxes = read_boxes(data)
